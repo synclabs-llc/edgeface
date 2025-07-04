@@ -198,15 +198,6 @@ class PersonTracker:
         self.cap.release()
         cv2.destroyAllWindows()
         
-    # def compute_histogram(img, bins=256, range=(0, 1)):
-    #     """
-    #     Compute a normalized histogram for a grayscale image.
-    #     Args:
-    #         img: (H, W) torch tensor, values in [0, 1]
-    #     """
-    #     hist = torch.histc(img, bins=bins, min=range[0], max=range[1])
-    #     hist = hist / hist.sum()  # Normalize
-    #     return hist
     
     def get_distribution_score(self, hist):
     

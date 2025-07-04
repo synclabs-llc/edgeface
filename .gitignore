@@ -5,3 +5,7 @@ YOLO_data/
 face_alignment/__pycache__/
 backbones/__pycache__/
 .vscode/
+edgeface310/
+models/
+new_test/
+edgeface310/
