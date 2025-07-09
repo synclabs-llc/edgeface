@@ -12,3 +12,7 @@ edgeface310/
 combined_model/
 group_test/
 faces/
+video/
+converted_models/
+checkpoints/
+__pycache__

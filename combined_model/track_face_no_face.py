@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import torch
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from torchvision import transforms
 from face_alignment import align
 from backbones import get_model
@@ -12,10 +15,18 @@ import cv2
 import torch.nn.functional as F
 from skimage.metrics import structural_similarity as ssim
 from torchmetrics.functional import structural_similarity_index_measure as ssim
+import argparse
 
+import psutil
+import threading
+
+
+def set_cpu_affinity(cores):
+    p = psutil.Process(os.getpid())
+    p.cpu_affinity(cores)
 
 class PersonTracker:
-    def __init__(self, face_model_name, yolo_detection_path, refrence_image_path, device='cuda'):
+    def __init__(self, face_model_name, yolo_detection_path, refrence_image_path, device='cpu'):
         self.face_model = get_model(face_model_name)
         self.detection_model = YOLO(yolo_detection_path)
         self.device = torch.device(device)
@@ -124,8 +135,8 @@ class PersonTracker:
         # Flatten to (N, 3 * bins)
         return histograms.view(N, -1)
 
-    def start_tracking(self, camera_index =0):
-        self.cap = cv2.VideoCapture(camera_index)
+    def start_tracking(self, video_source =0):
+        self.cap = cv2.VideoCapture(video_source)
         if not self.cap.isOpened():
             print("Error: Could not open camera.")
             return
@@ -211,3 +222,28 @@ class PersonTracker:
     
 
     
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--core_ids', nargs='+', type=int, default=[0, 1],
+                        help='List of CPU core IDs to bind this process to')
+    parser.add_argument('--image_path', type=str, required=True,
+                        help='Path to reference image for tracking')
+    parser.add_argument('--yolo_path', type=str, required=True,
+                        help='Path to YOLO model weights')
+    parser.add_argument('--face_model', type=str, required=True,
+                        help='Name of face model to use')
+    parser.add_argument('--video', type=str, default='0', help='Video file path or camera index')
+
+    args = parser.parse_args()
+    os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    set_cpu_affinity(args.core_ids)
+    video_source = int(args.video) if args.video.isdigit() else args.video
+    tracker = PersonTracker(
+        face_model_name=args.face_model,
+        yolo_detection_path=args.yolo_path,
+        refrence_image_path=args.image_path,
+        device='cpu'
+    )
+    print(f"[{args.image_path}] Running on cores: {psutil.Process().cpu_affinity()}, Thread: {threading.get_ident()}")
+
+    tracker.start_tracking(video_source)
