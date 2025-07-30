@@ -1,0 +1,22 @@
+{
+    "0.25": {
+        "False_Negatives": [],
+        "False_Positives": []
+    },
+    "0.3": {
+        "False_Negatives": [],
+        "False_Positives": []
+    },
+    "0.35": {
+        "False_Negatives": [],
+        "False_Positives": []
+    },
+    "0.45": {
+        "False_Negatives": [],
+        "False_Positives": []
+    },
+    "0.6": {
+        "False_Negatives": [],
+        "False_Positives": []
+    }
+}
