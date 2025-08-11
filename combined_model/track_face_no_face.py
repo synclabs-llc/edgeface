@@ -17,16 +17,16 @@ from skimage.metrics import structural_similarity as ssim
 from torchmetrics.functional import structural_similarity_index_measure as ssim
 import argparse
 
-import psutil
-import threading
+# import psutil
+# import threading
 
 
-def set_cpu_affinity(cores):
-    p = psutil.Process(os.getpid())
-    p.cpu_affinity(cores)
+# def set_cpu_affinity(cores):
+#     p = psutil.Process(os.getpid())
+#     p.cpu_affinity(cores)
 
 class PersonTracker:
-    def __init__(self, face_model_name, yolo_detection_path, refrence_image_path, device='cpu'):
+    def __init__(self, face_model_name, yolo_detection_path, refrence_image_path, device='cuda'):
         self.face_model = get_model(face_model_name)
         self.detection_model = YOLO(yolo_detection_path)
         self.device = torch.device(device)
@@ -208,7 +208,6 @@ class PersonTracker:
         # Cleanup
         self.cap.release()
         cv2.destroyAllWindows()
-        
     
     def get_distribution_score(self, hist):
     
@@ -224,8 +223,8 @@ class PersonTracker:
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--core_ids', nargs='+', type=int, default=[0, 1],
-                        help='List of CPU core IDs to bind this process to')
+    # parser.add_argument('--core_ids', nargs='+', type=int, default=[0, 1],
+    #                     help='List of CPU core IDs to bind this process to')
     parser.add_argument('--image_path', type=str, required=True,
                         help='Path to reference image for tracking')
     parser.add_argument('--yolo_path', type=str, required=True,
@@ -235,8 +234,8 @@ if __name__ == "__main__":
     parser.add_argument('--video', type=str, default='0', help='Video file path or camera index')
 
     args = parser.parse_args()
-    os.environ["CUDA_VISIBLE_DEVICES"] = ""
-    set_cpu_affinity(args.core_ids)
+    # os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    # set_cpu_affinity(args.core_ids)
     video_source = int(args.video) if args.video.isdigit() else args.video
     tracker = PersonTracker(
         face_model_name=args.face_model,
@@ -244,6 +243,6 @@ if __name__ == "__main__":
         refrence_image_path=args.image_path,
         device='cpu'
     )
-    print(f"[{args.image_path}] Running on cores: {psutil.Process().cpu_affinity()}, Thread: {threading.get_ident()}")
+    # print(f"[{args.image_path}] Running on cores: {psutil.Process().cpu_affinity()}, Thread: {threading.get_ident()}")
 
     tracker.start_tracking(video_source)

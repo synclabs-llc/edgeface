@@ -1,0 +1,24 @@
+# YOLOv8n-Detect-Pose model
+# Parameters
+nc: 80  # Number of object detection classes (e.g., COCO classes)
+kpt_shape: [17, 3] # Number of keypoints and their dimensions (x, y, confidence)
+
+# Backbone (shared)
+backbone:
+  # Standard YOLOv8 backbone layers (e.g., C2f, SPPF)
+  # ...
+
+# Head (two branches for detection and pose)
+head:
+  # Detection head
+  # Layers for bounding box prediction, classification, and confidence scores
+  # ...
+  - [ -1, 1, Detect, [nc] ] # Example: Detect layer for object detection output
+
+  # Pose estimation head
+  # Layers for keypoint prediction
+  # ...
+  - [ -1, 1, Pose, [kpt_shape] ] # Example: Pose layer for keypoint estimation output
+
+# Other configurations (e.g., NMS parameters, loss functions)
+# ...

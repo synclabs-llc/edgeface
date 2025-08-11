@@ -38,7 +38,7 @@ class MTCNN():
         self.min_face_size = 20
         self.thresholds =  [0.6,0.7,0.9]
         self.nms_thresholds = [0.7, 0.7, 0.7]
-        self.factor = 0.85
+        self.factor = 0.7
 
 
         os.chdir(cwd)

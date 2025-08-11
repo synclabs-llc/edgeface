@@ -9,10 +9,14 @@ edgeface310/
 models/
 new_test/
 edgeface310/
-
+.venv_wsl/
 group_test/
 faces/
 video/
 converted_models/
 checkpoints/
+mlruns/
+yolo_dataset/
+e/
+useful_videos/
 __pycache__

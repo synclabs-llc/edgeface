@@ -11,9 +11,19 @@ from torchvision import transforms
 from face_alignment import align
 from backbones import get_model
 
+import os
+import torch
+from torchvision import transforms
+from PIL import Image
+from face_alignment import align
+from backbones import get_model
+from torchvision.transforms import functional as F
+from PIL import Image
+import numpy as np
+import torch
+
 detector = mtcnn.MTCNN(device='cpu')
 yolo_model = YOLO('models/yolo11n.pt')
-
 
 def filter_inside_by_y1_difference(face_boxes, body_boxes):
     """
@@ -66,7 +76,6 @@ def filter_inside_by_y1_difference(face_boxes, body_boxes):
     return idxes
 
 
-
 def center_to_topleft(boxes):
     # boxes: (N, 4) -> [x_c, y_c, w, h]
     boxes = boxes.cpu().numpy()
@@ -84,6 +93,7 @@ model = get_model(model_name)
 checkpoint_path = os.path.join(checkpoint_folder, f"{model_name}.pt")
 model.load_state_dict(torch.load(checkpoint_path, map_location='cpu'))
 model.eval()
+
 
 def draw_boxes(image, results: list, boxes):
     fig, ax = plt.subplots(1)
@@ -191,12 +201,7 @@ def filter_matched_faces(face_boxes, idxes):
     matched_idxes = idxes[mask]
 
     return matched_face_boxes, matched_idxes
-import os
-import torch
-from torchvision import transforms
-from PIL import Image
-from face_alignment import align
-from backbones import get_model
+
 
 def generate_face_embeddings(folder_path, model_name="edgeface_xs_gamma_06", checkpoint_folder="checkpoints"):
     # Load model
@@ -244,10 +249,7 @@ def generate_face_embeddings(folder_path, model_name="edgeface_xs_gamma_06", che
 
     return embeddings, names
 
-from torchvision.transforms import functional as F
-from PIL import Image
-import numpy as np
-import torch
+
 
 def get_face_embeddings_from_image(image, face_boxes, model, device='cpu'):
     """
@@ -285,6 +287,7 @@ def get_face_embeddings_from_image(image, face_boxes, model, device='cpu'):
         embeddings = model(face_batch)  # shape: (n, 512)
 
     return embeddings
+
 def recognize_faces_from_aligned(
     img_path: str,
     model,
