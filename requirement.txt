@@ -1,28 +1,5 @@
-# PyTorch (CPU version)
-torch==2.3.0
-torchvision==0.18.0
-torchaudio==2.3.0
-
-# Core ML libraries
-timm==0.9.12
-numpy==1.24.4
-Pillow>=9.0.0,<11.0.0
-
-# ONNX and conversion tools
-onnx==1.12.0
-onnx-tf==1.9.0
-onnxruntime
-
-# TensorFlow and Addons
-tensorflow==2.10.1
-keras
-tensorflow-addons # ✅ Works with Python 3.10 + TF 2.14
-
-# Compatibility deps
-protobuf
-typing-extensions
-
-# Optional
-matplotlib
+pytorch
+torchvision
+timm
+mxnet
 opencv-python
-scipy

@@ -1,0 +1,32 @@
+// Project Flow
+digraph {
+	A [label="Camera / Motion Input"]
+	B [label="Motion Detection"]
+	C [label="Dynamic Queue
+(groups of frames with motion & timestamps)"]
+	D [label="Fall Detection
+- Detect Person
+- How long on ground"]
+	E [label="YOLO + Pose + ViT
+Face Detection & Person ID"]
+	F [label="Person ID"]
+	G [label="Main Processing"]
+	H [label="Count People"]
+	I [label="Action Module"]
+	J [label="New Action -> Timestamp
+- Change in Presence/Location
+- Sitting/Walking/Standing Duration"]
+	K [label="Output Filter
+Tasks"]
+	A -> B
+	B -> C
+	B -> D
+	D -> E
+	E -> F
+	F -> G [label="Person Change?"]
+	G -> H
+	H -> I [label="> 0 People"]
+	I -> J
+	C -> G
+	G -> K
+}
